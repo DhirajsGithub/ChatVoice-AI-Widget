@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactMarkdown from 'react-markdown';
 import { FALLBACK_BOT_AVATAR } from '../constants/avatars';
 
 interface MessageBubbleProps {
@@ -54,7 +55,7 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       <div
         style={{
           maxWidth: '80%',
-          padding: '8px 12px',
+          padding: `${message.isUser ? '8px' : '0'} 12px `,
           borderRadius: '12px',
           backgroundColor: message.isUser 
             ? (theme?.primaryColor || '#4F46E5')
@@ -66,7 +67,11 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
           ...fontStyles
         }}
       >
-        {message.text}
+        {message.isUser ? (
+          message.text
+        ) : (
+          <ReactMarkdown>{message.text}</ReactMarkdown>
+        )}
       </div>
     </div>
   );
