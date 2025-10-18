@@ -10,14 +10,14 @@ export default defineConfig({
       entry: path.resolve(__dirname, 'src/main.tsx'),
       name: 'AgentWidget',
       fileName: 'widget.bundle',
-      formats: ['umd'], // ✅ UMD for browser
+      formats: ['umd'], 
     },
     rollupOptions: {
       external: [], // bundle everything
       output: {
         // Force browser-compatible UMD
         format: 'umd',
-        entryFileNames: 'widget.bundle.umd.js', // ✅ specify exact output filename
+        entryFileNames: 'widget.bundle.umd.js',
         globals: {}, // standalone bundle
       },
     },
