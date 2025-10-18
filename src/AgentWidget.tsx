@@ -7,12 +7,17 @@ interface AgentWidgetProps {
 export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
   const [open, setOpen] = useState(false);
 
-  const { position = 'bottom-right', theme, agent } = config || {};
+  const { position = 'bottom-right', theme, agent, font } = config || {};
 
   const positionStyles =
     position === 'bottom-left'
       ? { left: '20px', bottom: '20px' }
       : { right: '20px', bottom: '20px' };
+
+  const fontFamily = font?.family || 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+  const fontStyles = {
+    fontFamily
+  };
 
   return (
     <div style={{ position: 'fixed', zIndex: 9999, ...positionStyles }}>
@@ -27,6 +32,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
+            ...fontStyles,
           }}
         >
           <div
