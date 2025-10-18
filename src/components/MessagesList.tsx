@@ -1,5 +1,6 @@
 import React from 'react';
 import { MessageBubble } from './MessageBubble';
+import { FALLBACK_BOT_AVATAR } from '../constants/avatars';
 
 interface Message {
   id: string;
@@ -43,7 +44,7 @@ export const MessagesList: React.FC<MessagesListProps> = ({
       {isLoading && (
         <div style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'flex-start', gap: '8px' }}>
           <img
-            src={agentAvatar || 'https://cdn-icons-png.flaticon.com/128/9732/9732800.png'}
+            src={agentAvatar || FALLBACK_BOT_AVATAR}
             alt="Bot Avatar"
             style={{
               width: 24,

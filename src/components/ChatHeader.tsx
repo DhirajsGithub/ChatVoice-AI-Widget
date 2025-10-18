@@ -1,4 +1,5 @@
 import React from 'react';
+import { FALLBACK_BOT_AVATAR } from '../constants/avatars';
 
 interface ChatHeaderProps {
   agent?: {
@@ -24,13 +25,11 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ agent, theme, onClose })
       }}
     >
       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-        {agent?.avatar && (
           <img
-            src={agent.avatar}
+            src={agent?.avatar || FALLBACK_BOT_AVATAR}
             alt="avatar"
             style={{ width: 24, height: 24, borderRadius: '50%', objectFit: 'contain' }}
           />
-        )}
         <span>{agent?.name || 'HelperBot'}</span>
       </div>
       <button
