@@ -3,32 +3,17 @@ import { ChatHeader } from "./components/ChatHeader";
 import { MessagesList } from "./components/MessagesList";
 import { MessageInput } from "./components/MessageInput";
 import { WidgetButton } from "./components/WidgetButton";
+import { useChat } from "./hooks/useChat";
 
 interface AgentWidgetProps {
   config: any;
 }
 
-interface Message {
-  id: string;
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
-
 export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      text: "👋 Hello! How can I help you?",
-      isUser: false,
-      timestamp: new Date(),
-    },
-  ]);
   const [inputValue, setInputValue] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [isRecording, setIsRecording] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const {
     position = "bottom-right",
@@ -37,6 +22,9 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
     font,
     context,
   } = config || {};
+
+  // Use the chat hook for message handling
+  const { messages, isLoading, sendMessage } = useChat(context);
 
   const positionStyles =
     position === "bottom-left"
@@ -57,29 +45,10 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
 
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
-
-    const userMessage: Message = {
-      id: Date.now().toString(),
-      text: inputValue.trim(),
-      isUser: true,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
+    
+    const messageText = inputValue.trim();
     setInputValue("");
-    setIsLoading(true);
-
-    // TODO: Replace with actual LLM API call
-    setTimeout(() => {
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        text: `I received your message: "${userMessage.text}". This is a placeholder response. LLM integration coming next!`,
-        isUser: false,
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botMessage]);
-      setIsLoading(false);
-    }, 1000);
+    await sendMessage(messageText);
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

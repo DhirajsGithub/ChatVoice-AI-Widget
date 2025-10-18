@@ -19,7 +19,7 @@ interface MessagesListProps {
     fontFamily: string;
   };
   agentAvatar?: string;
-  messagesEndRef: React.RefObject<HTMLDivElement>;
+  messagesEndRef: React.RefObject<HTMLDivElement | null>;
 }
 
 export const MessagesList: React.FC<MessagesListProps> = ({
