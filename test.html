@@ -2,28 +2,760 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Agent Widget Test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TechGear Pro - Wireless Earbuds | AI Agent Demo</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, sans-serif;
+        background: #f9fafb;
+        color: #111827;
+        line-height: 1.6;
+      }
+
+      /* Integration Banner */
+      .integration-banner {
+        background: white;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 16px 0;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+
+      .integration-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .integration-title {
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .code-block {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 12px;
+        position: relative;
+        font-family: "Courier New", monospace;
+        font-size: 12px;
+        overflow-x: auto;
+      }
+
+      .code-block pre {
+        margin: 0;
+        color: #374151;
+        line-height: 1.5;
+      }
+
+      .copy-btn {
+        position: absolute;
+        top: 8px;
+        right: 8px;
+        background: white;
+        border: 1px solid #d1d5db;
+        color: #374151;
+        padding: 6px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 11px;
+        font-weight: 500;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+
+      .copy-btn:hover {
+        background: #f9fafb;
+        border-color: #9ca3af;
+      }
+
+      .copy-btn.copied {
+        background: #d1fae5;
+        border-color: #10b981;
+        color: #065f46;
+      }
+
+      /* Main Content */
+      .container {
+        max-width: 1200px;
+        margin: 40px auto;
+        padding: 0 20px;
+      }
+
+      .product-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 60px;
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        margin-bottom: 40px;
+      }
+
+      .product-images {
+        position: relative;
+      }
+
+      .main-image {
+        width: 100%;
+        border-radius: 12px;
+        margin-bottom: 16px;
+        background: #f3f4f6;
+        aspect-ratio: 1;
+        object-fit: cover;
+      }
+
+      .thumbnail-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .thumbnail {
+        width: 100%;
+        aspect-ratio: 1;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.2s;
+        object-fit: cover;
+        background: #f3f4f6;
+      }
+
+      .thumbnail:hover {
+        border-color: #667eea;
+      }
+
+      .product-details h1 {
+        font-size: 32px;
+        font-weight: 700;
+        margin-bottom: 12px;
+        color: #111827;
+      }
+
+      .rating {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+
+      .stars {
+        color: #fbbf24;
+        font-size: 18px;
+      }
+
+      .rating-text {
+        color: #6b7280;
+        font-size: 14px;
+      }
+
+      .price {
+        font-size: 36px;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 24px;
+      }
+
+      .price span {
+        font-size: 20px;
+        color: #9ca3af;
+        text-decoration: line-through;
+        margin-left: 12px;
+      }
+
+      .description {
+        color: #4b5563;
+        margin-bottom: 24px;
+        line-height: 1.8;
+      }
+
+      .features {
+        list-style: none;
+        margin-bottom: 32px;
+      }
+
+      .features li {
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #374151;
+      }
+
+      .features li:before {
+        content: "✓";
+        color: #10b981;
+        font-weight: bold;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+
+      .cta-buttons {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 32px;
+      }
+
+      .btn {
+        padding: 16px 32px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+        border: none;
+        flex: 1;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+      }
+
+      .btn-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+      }
+
+      .btn-secondary:hover {
+        background: #f3f4f6;
+      }
+
+      .info-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 16px;
+        padding: 20px;
+        background: #f9fafb;
+        border-radius: 8px;
+      }
+
+      .info-item {
+        text-align: center;
+      }
+
+      .info-icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      .info-title {
+        font-weight: 600;
+        font-size: 14px;
+        color: #111827;
+      }
+
+      .info-text {
+        font-size: 12px;
+        color: #6b7280;
+      }
+
+      /* Additional Info Section */
+      .info-section {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+
+      .tabs {
+        display: flex;
+        gap: 24px;
+        border-bottom: 2px solid #e5e7eb;
+        margin-bottom: 32px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .tabs::-webkit-scrollbar {
+        height: 4px;
+      }
+
+      .tabs::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 2px;
+      }
+
+      .tab {
+        padding: 12px 4px;
+        font-weight: 600;
+        color: #6b7280;
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s;
+        white-space: nowrap;
+        flex-shrink: 0;
+        font-size: 15px;
+      }
+
+      .tab.active {
+        color: #667eea;
+        border-bottom-color: #667eea;
+      }
+
+      .tab-content h3 {
+        font-size: 20px;
+        margin-bottom: 16px;
+        color: #111827;
+      }
+
+      .tab-content p {
+        color: #4b5563;
+        margin-bottom: 16px;
+        line-height: 1.8;
+      }
+
+      .specs-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+      }
+
+      .spec-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        background: #f9fafb;
+        border-radius: 6px;
+      }
+
+      .spec-label {
+        font-weight: 500;
+        color: #6b7280;
+      }
+
+      .spec-value {
+        font-weight: 600;
+        color: #111827;
+      }
+
+      @media (max-width: 768px) {
+        .integration-banner {
+          padding: 12px 0;
+        }
+
+        .code-block {
+          font-size: 11px;
+          padding: 10px;
+          padding-right: 80px;
+        }
+
+        .copy-btn {
+          padding: 5px 10px;
+          font-size: 10px;
+        }
+
+        .product-section {
+          grid-template-columns: 1fr;
+          gap: 32px;
+          padding: 24px;
+        }
+
+        .product-details h1 {
+          font-size: 24px;
+        }
+
+        .price {
+          font-size: 28px;
+        }
+
+        .cta-buttons {
+          flex-direction: column;
+        }
+
+        .info-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .specs-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .info-section {
+          padding: 24px;
+        }
+
+        .tabs {
+          gap: 16px;
+        }
+
+        .tab {
+          font-size: 14px;
+          padding: 10px 4px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .container {
+          padding: 0 12px;
+        }
+
+        .code-block {
+          font-size: 10px;
+        }
+
+        .thumbnail-grid {
+          grid-template-columns: repeat(4, 1fr);
+          gap: 8px;
+        }
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello World Page</h1>
+    <!-- Integration Instructions Banner -->
+    <div class="integration-banner">
+      <div class="integration-container">
+        <div class="integration-title">
+          <span>💡</span>
+          <span>Copy this code to embed the AI widget on your website</span>
+        </div>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode()">
+            <span id="copy-icon">📋</span>
+            <span id="copy-text">Copy</span>
+          </button>
+          <pre id="embed-code">
+&lt;!-- Add this script tag to your website --&gt;
+&lt;script src="./dist/agent-widget.js?v=2"&gt;&lt;/script&gt;
 
-    <script>
-      window.AgentWidgetConfig = {
-        position: "bottom-right",
-        theme: { primaryColor: "#4F46E5" },
-        agent: {
-          name: "HelperBot",
-          avatar:
-            "https://cdn-icons-png.flaticon.com/128/18355/18355249.png",
-        },
-        font: {
-          family: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
-        },
-        context: "You are a helpful front-end expert specializing in React, TypeScript, and modern web development. Help users with coding questions, debugging, and best practices.",
-        enableVoice: false
-      };
-    </script>
+&lt;!-- Optional: Customize widget appearance and behavior --&gt;
+&lt;script&gt;
+  window.AgentWidgetConfig = {
+    position: "bottom-right",               // or "bottom-left", "top-left", "top-right"
+    theme: { primaryColor: "#667eea" },
+    agent: { 
+      name: "TechGear Assistant",           // You assistant name
+      avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png"        // or pass any valid image url
+    },
+    font: {
+      family:
+        "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+    },
+    context: "Add context about your business to help AI answer questions",
+    enableVoice: true                // Set to false to disable voice
+  };
+&lt;/script&gt;</pre
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Product Section -->
+    <div class="container">
+      <div class="product-section">
+        <!-- Product Images -->
+        <div class="product-images">
+          <img
+            src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=600&h=600&fit=crop"
+            alt="UltraSound Pro Wireless Earbuds"
+            class="main-image"
+            id="mainImage"
+          />
+          <div class="thumbnail-grid">
+            <img
+              src="https://images.unsplash.com/photo-1590658268037-6bf12165a8df?w=150&h=150&fit=crop"
+              class="thumbnail"
+              onclick="changeImage(this.src)"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1606841837239-c5a1a4a07af7?w=150&h=150&fit=crop"
+              class="thumbnail"
+              onclick="changeImage(this.src)"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1598331668826-20cecc596b86?w=150&h=150&fit=crop"
+              class="thumbnail"
+              onclick="changeImage(this.src)"
+            />
+            <img
+              src="https://images.unsplash.com/photo-1613040809024-b4ef7ba99bc3?w=150&h=150&fit=crop"
+              class="thumbnail"
+              onclick="changeImage(this.src)"
+            />
+          </div>
+        </div>
+
+        <!-- Product Details -->
+        <div class="product-details">
+          <h1>UltraSound Pro Wireless Earbuds</h1>
+
+          <div class="rating">
+            <div class="stars">★★★★★</div>
+            <span class="rating-text">4.8 (2,847 reviews)</span>
+          </div>
+
+          <div class="price">$129.99 <span>$199.99</span></div>
+
+          <p class="description">
+            Experience premium audio like never before with UltraSound Pro.
+            Featuring industry-leading Active Noise Cancellation, 40-hour
+            battery life, and Hi-Res audio quality, these earbuds are perfect
+            for music lovers and professionals alike.
+          </p>
+
+          <ul class="features">
+            <li>Active Noise Cancellation with adaptive technology</li>
+            <li>40-hour total battery life (8hrs + 32hrs case)</li>
+            <li>Premium Hi-Res audio with custom drivers</li>
+            <li>IPX7 water & sweat resistance</li>
+            <li>Bluetooth 5.3 for seamless connectivity</li>
+            <li>Comfortable ergonomic design with 4 ear tip sizes</li>
+          </ul>
+
+          <div class="cta-buttons">
+            <button class="btn btn-primary">Add to Cart</button>
+            <button class="btn btn-secondary">Add to Wishlist</button>
+          </div>
+
+          <div class="info-grid">
+            <div class="info-item">
+              <div class="info-icon">🚚</div>
+              <div class="info-title">Free Shipping</div>
+              <div class="info-text">On orders $50+</div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">↩️</div>
+              <div class="info-title">30-Day Returns</div>
+              <div class="info-text">Money-back guarantee</div>
+            </div>
+            <div class="info-item">
+              <div class="info-icon">🛡️</div>
+              <div class="info-title">2-Year Warranty</div>
+              <div class="info-text">Full coverage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Additional Information -->
+      <div class="info-section">
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('description')">
+            Description
+          </div>
+          <div class="tab" onclick="showTab('specs')">Specifications</div>
+          <div class="tab" onclick="showTab('shipping')">
+            Shipping & Returns
+          </div>
+        </div>
+
+        <div class="tab-content" id="description-content">
+          <h3>Premium Audio Experience</h3>
+          <p>
+            The UltraSound Pro wireless earbuds deliver studio-quality sound
+            with powerful bass, crystal-clear mids, and sparkling highs. Our
+            custom-tuned 10mm drivers ensure every note is reproduced with
+            exceptional accuracy.
+          </p>
+          <p>
+            Advanced Active Noise Cancellation adapts to your environment,
+            blocking out distractions whether you're on a plane, at the gym, or
+            in a busy office. Transparency mode lets you hear your surroundings
+            when needed, without removing your earbuds.
+          </p>
+          <p>
+            With an impressive 40-hour total battery life, you can enjoy your
+            music for days without charging. Quick charge technology gives you 2
+            hours of playback from just 10 minutes of charging.
+          </p>
+        </div>
+
+        <div class="tab-content" id="specs-content" style="display: none">
+          <h3>Technical Specifications</h3>
+          <div class="specs-grid">
+            <div class="spec-item">
+              <span class="spec-label">Driver Size</span>
+              <span class="spec-value">10mm Dynamic</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Frequency Response</span>
+              <span class="spec-value">20Hz - 40kHz</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Bluetooth Version</span>
+              <span class="spec-value">5.3</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Wireless Range</span>
+              <span class="spec-value">10 meters / 33 feet</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Battery Life (Earbuds)</span>
+              <span class="spec-value">8 hours</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Battery Life (Total)</span>
+              <span class="spec-value">40 hours</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Charging Time</span>
+              <span class="spec-value">1.5 hours</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Water Resistance</span>
+              <span class="spec-value">IPX7</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Weight (Each Earbud)</span>
+              <span class="spec-value">5.4g</span>
+            </div>
+            <div class="spec-item">
+              <span class="spec-label">Case Weight</span>
+              <span class="spec-value">48g</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-content" id="shipping-content" style="display: none">
+          <h3>Shipping Information</h3>
+          <p>
+            <strong>Free Standard Shipping:</strong> All orders over $50 qualify
+            for free standard shipping (3-5 business days).
+          </p>
+          <p>
+            <strong>Express Shipping:</strong> Available for $15 (1-2 business
+            days).
+          </p>
+          <p>
+            <strong>International Shipping:</strong> We ship to over 50
+            countries. Rates and delivery times vary by location.
+          </p>
+
+          <h3 style="margin-top: 32px">Returns & Refunds</h3>
+          <p>
+            We offer a 30-day money-back guarantee on all products. If you're
+            not completely satisfied, return your purchase for a full refund.
+            Items must be in original condition with all packaging.
+          </p>
+          <p>
+            <strong>To initiate a return:</strong> Contact our support team at
+            support@techgear.example.com or visit our returns portal.
+          </p>
+          <p>
+            All products come with a 2-year manufacturer warranty covering
+            defects in materials and workmanship.
+          </p>
+        </div>
+      </div>
+    </div>
 
     <script src="./dist/agent-widget.js?v=2"></script>
+
+    <script>
+      // Image gallery functionality
+      function changeImage(src) {
+        document.getElementById("mainImage").src = src.replace(
+          "w=150&h=150",
+          "w=600&h=600"
+        );
+      }
+
+      // Tab functionality
+      function showTab(tabName) {
+        // Hide all content
+        document.querySelectorAll(".tab-content").forEach((content) => {
+          content.style.display = "none";
+        });
+
+        // Remove active class from all tabs
+        document.querySelectorAll(".tab").forEach((tab) => {
+          tab.classList.remove("active");
+        });
+
+        // Show selected content and mark tab as active
+        document.getElementById(tabName + "-content").style.display = "block";
+        event.target.classList.add("active");
+      }
+
+      // Copy code functionality
+      function copyCode() {
+        const code = document.getElementById("embed-code").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const btn = document.querySelector(".copy-btn");
+          const icon = document.getElementById("copy-icon");
+          const text = document.getElementById("copy-text");
+
+          btn.classList.add("copied");
+          icon.textContent = "✓";
+          text.textContent = "Copied!";
+
+          setTimeout(() => {
+            btn.classList.remove("copied");
+            icon.textContent = "📋";
+            text.textContent = "Copy";
+          }, 2000);
+        });
+      }
+
+      // Widget Configuration (Example - customize for your use case)
+      window.AgentWidgetConfig = {
+        position: "bottom-right",
+        theme: { primaryColor: "#667eea" },
+        agent: {
+          name: "TechGear Assistant",
+          avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png",
+        },
+        font: {
+          family:
+            "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        },
+        context: `You are TechGear Pro's customer support assistant. Help customers with product questions.
+
+Product: UltraSound Pro Wireless Earbuds
+Price: $129.99 (was $199.99)
+Rating: 4.8/5 stars (2,847 reviews)
+
+Key Features:
+- Active Noise Cancellation (ANC) with adaptive technology
+- 40-hour battery life with charging case
+- Premium Hi-Res audio with custom drivers
+- IPX7 water resistance
+- Bluetooth 5.3 connectivity
+- Touch controls and voice assistant support
+
+Shipping & Returns:
+- Free shipping on orders over $50: https://techgear.example.com/shipping
+- 30-day money-back guarantee: https://techgear.example.com/returns
+- Standard shipping: 3-5 business days
+- Express shipping: 1-2 business days ($15)
+
+Support:
+- Warranty info: https://techgear.example.com/warranty
+- Setup guide: https://techgear.example.com/setup
+- FAQs: https://techgear.example.com/faq
+- Contact: support@techgear.example.com
+
+Answer customer questions about features, shipping, returns, and help them make purchase decisions. Be friendly and helpful!`,
+        enableVoice: true,
+      };
+    </script>
   </body>
 </html>
