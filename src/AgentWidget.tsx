@@ -129,6 +129,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
             theme={theme}
             onClose={() => setOpen(false)}
             voice={voice}
+            enableVoice={enableVoice}
           />
 
           <MessagesList

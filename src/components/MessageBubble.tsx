@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import { FALLBACK_BOT_AVATAR } from '../constants/avatars';
+import { formatTimestamp } from '../utils/timeUtils';
 
 interface MessageBubbleProps {
   message: {
@@ -55,7 +56,8 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
       <div
         style={{
           maxWidth: '80%',
-          padding: `${message.isUser ? '8px' : '0'} 12px `,
+          padding: `8px 12px `,
+          paddingTop: !message.isUser ? '0px' : '8px',
           borderRadius: '12px',
           backgroundColor: message.isUser 
             ? (theme?.primaryColor || '#4F46E5')
@@ -72,6 +74,16 @@ export const MessageBubble: React.FC<MessageBubbleProps> = ({
         ) : (
           <ReactMarkdown>{message.text}</ReactMarkdown>
         )}
+        
+        {/* Timestamp */}
+        <div style={{
+          fontSize: '11px',
+          color: message.isUser ? 'rgba(255,255,255,0.7)' : '#999',
+          marginTop: '4px',
+          textAlign: message.isUser ? 'right' : 'left'
+        }}>
+          {formatTimestamp(message.timestamp)}
+        </div>
       </div>
     </div>
   );

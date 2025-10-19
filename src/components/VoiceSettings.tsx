@@ -7,9 +7,10 @@ interface VoiceSettingsProps {
   };
   onClose: () => void;
   onLanguageChange?: (language: string) => void;
+  enableVoice?: boolean;
 }
 
-export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onClose, onLanguageChange }) => {
+export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onClose, onLanguageChange, enableVoice }) => {
   // Load settings from localStorage or use defaults
   const [selectedLanguage, setSelectedLanguage] = useState(() => {
     return localStorage.getItem('agent-widget-voice-language') || 'en-US';
@@ -21,7 +22,12 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
     return parseFloat(localStorage.getItem('agent-widget-speech-pitch') || '1');
   });
   const [autoSpeak, setAutoSpeak] = useState(() => {
-    return localStorage.getItem('agent-widget-auto-speak') !== 'false';
+    // Use enableVoice from config as default if no saved preference
+    const saved = localStorage.getItem('agent-widget-auto-speak');
+    if (saved === null) {
+      return enableVoice === true; // Use enableVoice as default
+    }
+    return saved !== 'false';
   });
 
   if (!voice || !voice.isSupported) {
@@ -79,6 +85,12 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
     localStorage.setItem('agent-widget-voice-language', language);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new CustomEvent('agent-widget-language-changed', {
+      detail: { language }
+    }));
+    
     // Notify parent component of language change
     if (onLanguageChange) {
       onLanguageChange(language);
@@ -128,7 +140,6 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
       position: 'absolute',
       top: '100%',
       right: 0,
-      marginTop: '8px',
       padding: '16px',
       backgroundColor: '#fff',
       borderRadius: '8px',
@@ -213,14 +224,35 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
 
       {/* Auto-speak toggle */}
       <div style={{ marginBottom: '16px' }}>
-        <label style={{ display: 'flex', alignItems: 'center', fontSize: '14px' }}>
+        <label style={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          fontSize: '14px',
+          cursor: 'pointer',
+          padding: '8px',
+          borderRadius: '6px',
+          backgroundColor: autoSpeak ? '#f0f9ff' : 'transparent',
+          border: `1px solid ${autoSpeak ? (theme?.primaryColor || '#4F46E5') : '#e5e7eb'}`,
+          transition: 'all 0.2s ease'
+        }}>
           <input
             type="checkbox"
             checked={autoSpeak}
             onChange={(e) => handleAutoSpeakChange(e.target.checked)}
-            style={{ marginRight: '8px' }}
+            style={{ 
+              marginRight: '10px',
+              width: '16px',
+              height: '16px',
+              accentColor: theme?.primaryColor || '#4F46E5',
+              cursor: 'pointer'
+            }}
           />
-          Auto-speak AI responses
+          <span style={{ 
+            fontWeight: autoSpeak ? '500' : '400',
+            color: autoSpeak ? (theme?.primaryColor || '#4F46E5') : '#374151'
+          }}>
+            🔊 Auto-speak AI responses
+          </span>
         </label>
       </div>
 
@@ -230,7 +262,6 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
         display: 'flex', 
         flexDirection: 'column', 
         gap: '8px',
-        marginBottom: '12px'
       }}>
         {voice.isSpeaking ? (
           <button
