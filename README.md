@@ -8,6 +8,10 @@ Transform your website into an intelligent, multilingual voice-enabled assistant
 
 ChatVoice-AI-Widget is a revolutionary embeddable chat widget that combines **advanced AI conversation** with **real-time voice interaction**. It's designed to provide instant, intelligent responses to your website visitors while supporting multiple languages and voice commands.
 
+**[🚀 Quick Start](#-quick-start)** - Get up and running in under 5 minutes!
+
+![ChatVoice-AI-Widget Demo](src/assets/final-demo.gif)
+
 ### Key Features:
 - 🎯 **One-Click Integration** - Embed with a single script tag
 - 🎤 **Voice-First Experience** - Speak to your AI assistant naturally
@@ -78,7 +82,7 @@ We've built ChatVoice-AI-Widget with a **mobile-first, performance-optimized** a
                 name: "AI Assistant",   // your widget name
                 avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png"  // add any valid url
             },
-            context: "You are a helpful AI assistant for our business...",
+            context: "Add context about your business to help AI answer questions",
             enableVoice: true
         };
     </script>
@@ -111,42 +115,13 @@ ChatVoice-AI-Widget supports **10+ languages** with native voice synthesis:
 
 Users can switch languages on-the-fly, and the AI responds in their chosen language with natural voice synthesis.
 
-## 🎨 Customization Examples
-
-### E-commerce Store:
-```javascript
-window.AgentWidgetConfig = {
-    position: "bottom-right",
-    theme: { primaryColor: "#FF6B6B" },
-    agent: {
-        name: "Shopping Assistant",
-        avatar: "🛍️"
-    },
-    context: "You are a helpful shopping assistant for our online store. Help customers find products, answer questions about shipping, and provide recommendations.",
-    enableVoice: true
-};
-```
-
-### Restaurant:
-```javascript
-window.AgentWidgetConfig = {
-    position: "bottom-left",
-    theme: { primaryColor: "#FFA500" },
-    agent: {
-        name: "Chef's Assistant",
-        avatar: "👨‍🍳"
-    },
-    context: "You are a friendly assistant for our restaurant. Help customers with menu questions, dietary restrictions, and reservation inquiries.",
-    enableVoice: true
-};
-```
 ## 🛠️ Development
 
 ### Building from Source:
 ```bash
 # Clone the repository
-git clone https://github.com/your-org/chatvoice-ai-widget.git
-cd chatvoice-ai-widget
+git clone https://github.com/DhirajsGithub/ChatVoice-AI-Widget
+cd ChatVoice-AI-Widget
 
 # Install dependencies
 npm install
@@ -175,6 +150,8 @@ src/
 │   └── geminiApi.ts     # Gemini AI integration
 └── utils/               # Utility functions
     └── timeUtils.ts     # Time formatting
+loader/
+└── embed.js             # Widget loader script
 ```
 
 ## 📈 Roadmap
@@ -202,7 +179,7 @@ Ready to transform your website with AI-powered voice chat?
 
 **Add ChatVoice-AI-Widget to your website in under 5 minutes and start engaging your visitors like never before!**
 
-[Get Started Now](#-quick-start) 
+**[🚀 Get Started Now](#-quick-start)** 
 
 ---
 
