@@ -11,9 +11,6 @@ export const WidgetButton: React.FC<WidgetButtonProps> = ({ onClick, agentAvatar
     <button
       onClick={onClick}
       style={{
-        position: "fixed",
-        bottom: 24,
-        right: 24,
         backgroundColor: "#ffffff",
         border: "none",
         borderRadius: "50%",
