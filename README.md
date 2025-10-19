@@ -82,7 +82,7 @@ We've built ChatVoice-AI-Widget with a **mobile-first, performance-optimized** a
             enableVoice: true
         };
     </script>
-    <script src="https://your-cdn.com/agent-widget.js"></script>
+    <script src="https://chat-voice-ai-widget.vercel.app/agent-widget.js"></script>
 </head>
 <body>
     <!-- Your website content -->

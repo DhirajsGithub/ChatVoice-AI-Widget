@@ -438,32 +438,33 @@
           <span>Copy this code to embed the AI widget on your website</span>
         </div>
         <div class="code-block">
+          <!-- Copy Button -->
           <button class="copy-btn" onclick="copyCode()">
             <span id="copy-icon">📋</span>
             <span id="copy-text">Copy</span>
           </button>
-          <pre id="embed-code">
-&lt;!-- Add this script tag to your website --&gt;
-&lt;script src="./dist/agent-widget.js?v=2"&gt;&lt;/script&gt;
 
-&lt;!-- Optional: Customize widget appearance and behavior --&gt;
-&lt;script&gt;
-  window.AgentWidgetConfig = {
-    position: "bottom-right",               // or "bottom-left", "top-left", "top-right"
-    theme: { primaryColor: "#667eea" },
-    agent: { 
-      name: "TechGear Assistant",           // You assistant name
-      avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png"        // or pass any valid image url
-    },
-    font: {
-      family:
-        "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
-    },
-    context: "Add context about your business to help AI answer questions",
-    enableVoice: true                // Set to false to disable voice
-  };
-&lt;/script&gt;</pre
-          >
+          <pre id="embed-code">
+        &lt;!-- Step 1 (Optional): Customize Widget Appearance & Behavior --&gt;
+        &lt;script&gt;
+          window.AgentWidgetConfig = {
+            position: "bottom-right",  // Options: "bottom-left", "top-left", "top-right"
+            theme: { primaryColor: "#667eea" },
+            agent: { 
+              name: "TechGear Assistant",  
+              avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png"
+            },
+            font: {
+              family: "Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            },
+            context: "Add context about your business to help AI answer questions",
+            enableVoice: true  // Set to false to disable voice
+          };
+        &lt;/script&gt;
+        
+        &lt;!-- Step 2 (Mandatory): Include the Widget Script --&gt;
+        &lt;script src="https://chat-voice-ai-widget.vercel.app/agent-widget.js"&gt;&lt;/script&gt;
+          </pre>
         </div>
       </div>
     </div>
