@@ -72,11 +72,11 @@ We've built ChatVoice-AI-Widget with a **mobile-first, performance-optimized** a
         window.AgentWidgetConfig = {
             position: "bottom-right", // or "top-left", "top-right", "bottom-left"
             theme: {
-                primaryColor: "#4F46E5"
+                primaryColor: "#4F46E5"   // customize the primary color of your widget
             },
             agent: {
-                name: "AI Assistant",
-                avatar: "🤖"
+                name: "AI Assistant",   // your widget name
+                avatar: "https://cdn-icons-png.flaticon.com/128/18355/18355249.png"  // add any valid url
             },
             context: "You are a helpful AI assistant for our business...",
             enableVoice: true
