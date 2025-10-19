@@ -27,10 +27,19 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
   // Use the chat hook for message handling
   const { messages, isLoading, sendMessage, sendVoiceMessage, voice } = useChat(context, enableVoice);
 
-  const positionStyles =
-    position === "bottom-left"
-      ? { left: "20px", bottom: "20px" }
-      : { right: "20px", bottom: "20px" };
+  const positionStyles = (() => {
+    switch (position) {
+      case "top-left":
+        return { left: "20px", top: "20px" };
+      case "top-right":
+        return { right: "20px", top: "20px" };
+      case "bottom-left":
+        return { left: "20px", bottom: "20px" };
+      case "bottom-right":
+      default:
+        return { right: "20px", bottom: "20px" };
+    }
+  })();
 
   const fontFamily =
     font?.family ||
