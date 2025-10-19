@@ -225,7 +225,42 @@ export const useVoice = (defaultLanguage: string = 'en-US') => {
     }
   }, [state.isListening]);
 
-  // Speak text
+  // Find best voice for language
+  const findBestVoice = useCallback((language: string, voices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
+    // First try exact match
+    let voice = voices.find(v => v.lang === language);
+    if (voice) return voice;
+    
+    // Try language family match (e.g., 'en' for 'en-US')
+    const langFamily = language.split('-')[0];
+    voice = voices.find(v => v.lang.startsWith(langFamily));
+    if (voice) return voice;
+    
+    // Try similar languages
+    const languageMap: { [key: string]: string[] } = {
+      'es-ES': ['es-MX', 'es-AR', 'es-CO'],
+      'fr-FR': ['fr-CA', 'fr-BE'],
+      'de-DE': ['de-AT', 'de-CH'],
+      'it-IT': ['it-CH'],
+      'pt-BR': ['pt-PT'],
+      'en-US': ['en-GB', 'en-AU', 'en-CA', 'en-IN']
+    };
+    
+    const alternatives = languageMap[language] || [];
+    for (const alt of alternatives) {
+      voice = voices.find(v => v.lang === alt);
+      if (voice) return voice;
+    }
+    
+    // Fallback to English
+    voice = voices.find(v => v.lang.startsWith('en'));
+    if (voice) return voice;
+    
+    // Last resort - any voice
+    return voices[0] || null;
+  }, []);
+
+  // Speak text using the selected language from voice settings
   const speak = useCallback((text: string, options: VoiceOptions = {}) => {
     if (!synthesisRef.current) {
       setState(prev => ({ ...prev, error: 'Speech synthesis not available' }));
@@ -237,14 +272,18 @@ export const useVoice = (defaultLanguage: string = 'en-US') => {
 
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Set voice options
-    if (options.voice) {
-      utterance.voice = options.voice;
-    } else if (options.language) {
-      // Find a voice for the specified language
-      const voices = state.availableVoices;
-      const voice = voices.find(v => v.lang.startsWith(options.language!.split('-')[0]));
-      if (voice) utterance.voice = voice;
+    // Use the language from options (which comes from voice settings)
+    const selectedLanguage = options.language || 'en-US';
+    
+    // Find the best voice for the selected language
+    const voices = state.availableVoices;
+    const bestVoice = findBestVoice(selectedLanguage, voices);
+    
+    if (bestVoice) {
+      utterance.voice = bestVoice;
+      utterance.lang = bestVoice.lang;
+    } else {
+      utterance.lang = selectedLanguage;
     }
 
     utterance.rate = options.rate || 1;
@@ -260,7 +299,6 @@ export const useVoice = (defaultLanguage: string = 'en-US') => {
     };
 
     utterance.onerror = (event) => {
-      // Don't show error for intentional interruptions
       if (event.error !== 'interrupted') {
         setState(prev => ({ 
           ...prev, 
@@ -268,16 +306,12 @@ export const useVoice = (defaultLanguage: string = 'en-US') => {
           isSpeaking: false 
         }));
       } else {
-        // Just reset speaking state for interruptions
-        setState(prev => ({ 
-          ...prev, 
-          isSpeaking: false 
-        }));
+        setState(prev => ({ ...prev, isSpeaking: false }));
       }
     };
 
     synthesisRef.current.speak(utterance);
-  }, [state.availableVoices]);
+  }, [state.availableVoices, findBestVoice]);
 
   // Stop speaking
   const stopSpeaking = useCallback(() => {
