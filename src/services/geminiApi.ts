@@ -75,6 +75,9 @@ export class GeminiApiService {
       );
 
       if (!response.ok) {
+        if (response.status === 429) {
+          throw new Error('QUOTA_EXCEEDED');
+        }
         throw new Error(`Gemini API error: ${response.status}`);
       }
 

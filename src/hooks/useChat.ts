@@ -66,13 +66,39 @@ export const useChat = (context?: string, enableVoice: boolean = true) => {
       
       // Auto-speak the response if voice is enabled
       if (enableVoice && voice.isSupported) {
-        voice.speak(response);
+        // Get saved voice settings
+        const savedLanguage = localStorage.getItem('agent-widget-voice-language') || 'en-US';
+        const savedRate = parseFloat(localStorage.getItem('agent-widget-speech-rate') || '1');
+        const savedPitch = parseFloat(localStorage.getItem('agent-widget-speech-pitch') || '1');
+        const autoSpeakEnabled = localStorage.getItem('agent-widget-auto-speak') !== 'false';
+        
+        if (autoSpeakEnabled) {
+          voice.speak(response, {
+            language: savedLanguage,
+            rate: savedRate,
+            pitch: savedPitch
+          });
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
+      
+      let errorText = "Sorry, I encountered an error. Please try again.";
+      
+      // Handle specific error types
+      if (error instanceof Error) {
+        if (error.message === 'QUOTA_EXCEEDED') {
+          errorText = "⚠️ API quota exceeded. Please try again after some time. We apologize for the inconvenience.";
+        } else if (error.message.includes('network') || error.message.includes('fetch')) {
+          errorText = "🌐 Network error. Please check your internet connection and try again.";
+        } else if (error.message.includes('429')) {
+          errorText = "⚠️ Too many requests. Please wait a moment and try again.";
+        }
+      }
+      
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        text: "Sorry, I encountered an error. Please try again.",
+        text: errorText,
         isUser: false,
         timestamp: new Date(),
       };

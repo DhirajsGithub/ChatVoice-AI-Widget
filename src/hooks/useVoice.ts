@@ -260,11 +260,20 @@ export const useVoice = (defaultLanguage: string = 'en-US') => {
     };
 
     utterance.onerror = (event) => {
-      setState(prev => ({ 
-        ...prev, 
-        error: `Speech synthesis error: ${event.error}`,
-        isSpeaking: false 
-      }));
+      // Don't show error for intentional interruptions
+      if (event.error !== 'interrupted') {
+        setState(prev => ({ 
+          ...prev, 
+          error: `Speech synthesis error: ${event.error}`,
+          isSpeaking: false 
+        }));
+      } else {
+        // Just reset speaking state for interruptions
+        setState(prev => ({ 
+          ...prev, 
+          isSpeaking: false 
+        }));
+      }
     };
 
     synthesisRef.current.speak(utterance);

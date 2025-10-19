@@ -57,7 +57,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ agent, theme, onClose, v
               }}
               title="Voice Settings"
             >
-              🎤
+              ⚙️
             </button>
           )}
           

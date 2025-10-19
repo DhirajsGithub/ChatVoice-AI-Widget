@@ -10,10 +10,19 @@ interface VoiceSettingsProps {
 }
 
 export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onClose, onLanguageChange }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState('en-US');
-  const [speechRate, setSpeechRate] = useState(1);
-  const [speechPitch, setSpeechPitch] = useState(1);
-  const [autoSpeak, setAutoSpeak] = useState(true);
+  // Load settings from localStorage or use defaults
+  const [selectedLanguage, setSelectedLanguage] = useState(() => {
+    return localStorage.getItem('agent-widget-voice-language') || 'en-US';
+  });
+  const [speechRate, setSpeechRate] = useState(() => {
+    return parseFloat(localStorage.getItem('agent-widget-speech-rate') || '1');
+  });
+  const [speechPitch, setSpeechPitch] = useState(() => {
+    return parseFloat(localStorage.getItem('agent-widget-speech-pitch') || '1');
+  });
+  const [autoSpeak, setAutoSpeak] = useState(() => {
+    return localStorage.getItem('agent-widget-auto-speak') !== 'false';
+  });
 
   if (!voice || !voice.isSupported) {
     return (
@@ -69,10 +78,26 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
 
   const handleLanguageChange = (language: string) => {
     setSelectedLanguage(language);
+    localStorage.setItem('agent-widget-voice-language', language);
     // Notify parent component of language change
     if (onLanguageChange) {
       onLanguageChange(language);
     }
+  };
+
+  const handleRateChange = (rate: number) => {
+    setSpeechRate(rate);
+    localStorage.setItem('agent-widget-speech-rate', rate.toString());
+  };
+
+  const handlePitchChange = (pitch: number) => {
+    setSpeechPitch(pitch);
+    localStorage.setItem('agent-widget-speech-pitch', pitch.toString());
+  };
+
+  const handleAutoSpeakChange = (enabled: boolean) => {
+    setAutoSpeak(enabled);
+    localStorage.setItem('agent-widget-auto-speak', enabled.toString());
   };
 
   const testVoice = () => {
@@ -109,6 +134,9 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
       borderRadius: '8px',
       boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
       minWidth: '300px',
+      maxWidth: '320px',
+      maxHeight: '70vh',
+      overflowY: 'auto',
       zIndex: 1000
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
@@ -162,7 +190,7 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
           max="2"
           step="0.1"
           value={speechRate}
-          onChange={(e) => setSpeechRate(parseFloat(e.target.value))}
+          onChange={(e) => handleRateChange(parseFloat(e.target.value))}
           style={{ width: '100%' }}
         />
       </div>
@@ -178,7 +206,7 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
           max="2"
           step="0.1"
           value={speechPitch}
-          onChange={(e) => setSpeechPitch(parseFloat(e.target.value))}
+          onChange={(e) => handlePitchChange(parseFloat(e.target.value))}
           style={{ width: '100%' }}
         />
       </div>
@@ -189,53 +217,55 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
           <input
             type="checkbox"
             checked={autoSpeak}
-            onChange={(e) => setAutoSpeak(e.target.checked)}
+            onChange={(e) => handleAutoSpeakChange(e.target.checked)}
             style={{ marginRight: '8px' }}
           />
           Auto-speak AI responses
         </label>
       </div>
 
-      {/* Test Voice Button */}
-      <button
-        onClick={testVoice}
-        disabled={voice.isSpeaking}
-        style={{
-          width: '100%',
-          padding: '10px',
-          backgroundColor: voice.isSpeaking 
-            ? '#ccc' 
-            : (theme?.primaryColor || '#4F46E5'),
-          color: '#fff',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: voice.isSpeaking ? 'not-allowed' : 'pointer',
-          fontSize: '14px',
-          marginBottom: '8px'
-        }}
-      >
-        🔊 Test Voice
-      </button>
-
-      {/* Stop Voice Button */}
-      {voice.isSpeaking && (
-        <button
-          onClick={() => voice.stopSpeaking()}
-          style={{
-            width: '100%',
-            padding: '10px',
-            backgroundColor: '#ff4444',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer',
-            fontSize: '14px',
-            marginBottom: '12px'
-          }}
-        >
-          ⏹️ Stop Speaking
-        </button>
-      )}
+      {/* Voice Control Buttons - Fixed height container */}
+      <div style={{ 
+        minHeight: '50px', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        gap: '8px',
+        marginBottom: '12px'
+      }}>
+        {voice.isSpeaking ? (
+          <button
+            onClick={() => voice.stopSpeaking()}
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: '#ff4444',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            ⏹️ Stop Speaking
+          </button>
+        ) : (
+          <button
+            onClick={testVoice}
+            style={{
+              width: '100%',
+              padding: '10px',
+              backgroundColor: theme?.primaryColor || '#4F46E5',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '14px'
+            }}
+          >
+            🔊 Test Voice
+          </button>
+        )}
+      </div>
 
       {/* Error Display */}
       {voice.error && (
