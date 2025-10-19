@@ -14,7 +14,7 @@
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/javascript"
         },
-        "dest": "/dist/widget/$1"
+        "dest": "/$1"
       }
     ]
   }
