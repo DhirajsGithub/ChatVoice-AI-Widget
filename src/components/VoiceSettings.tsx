@@ -166,8 +166,8 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
       boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
       minWidth: '300px',
       maxWidth: '320px',
-      maxHeight: '70vh',
-      overflowY: 'auto',
+      height: 400,
+      overflowY: 'scroll',
       zIndex: 1000
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
