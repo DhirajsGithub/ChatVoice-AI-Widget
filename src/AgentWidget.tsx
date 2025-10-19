@@ -3,6 +3,7 @@ import { ChatHeader } from "./components/ChatHeader";
 import { MessagesList } from "./components/MessagesList";
 import { MessageInput } from "./components/MessageInput";
 import { WidgetButton } from "./components/WidgetButton";
+import { Toast } from "./components/Toast";
 import { useChat } from "./hooks/useChat";
 
 interface AgentWidgetProps {
@@ -13,6 +14,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
   const [open, setOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [isRecording, setIsRecording] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: 'error' | 'success' | 'warning' | 'info' } | null>(null);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   const {
@@ -21,10 +23,11 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
     agent,
     font,
     context,
+    enableVoice = true,
   } = config || {};
 
   // Use the chat hook for message handling
-  const { messages, isLoading, sendMessage } = useChat(context);
+  const { messages, isLoading, sendMessage, sendVoiceMessage, voice } = useChat(context, enableVoice);
 
   const positionStyles =
     position === "bottom-left"
@@ -58,23 +61,78 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
     }
   };
 
-  const handleMicClick = () => {
+  const handleMicClick = async () => {
+    if (!voice) {
+      console.warn('Voice functionality not available');
+      return;
+    }
+
     if (isRecording) {
       // Stop recording
+      voice.stopListening();
       setIsRecording(false);
-      // TODO: Implement actual voice recording stop
-      console.log("Stopping voice recording...");
+      
+      // Get the transcript and send it as a message
+      const transcript = voice.getTranscript();
+      if (transcript.trim()) {
+        await sendVoiceMessage(transcript);
+      }
     } else {
       // Start recording
-      setIsRecording(true);
-      // TODO: Implement actual voice recording start
-      console.log("Starting voice recording...");
+      try {
+        voice.startListening();
+        setIsRecording(true);
+      } catch (error) {
+        console.error('Failed to start voice recording:', error);
+        setIsRecording(false);
+        
+        // Show permission error toast
+        setToast({
+          message: 'Microphone permission denied. Please allow microphone access to use voice features.',
+          type: 'error'
+        });
+      }
     }
   };
 
+  // Listen for voice errors
+  useEffect(() => {
+    if (voice && voice.error) {
+      if (voice.error.includes('permission') || voice.error.includes('not-allowed')) {
+        setToast({
+          message: 'Microphone permission denied. Please allow microphone access in your browser settings.',
+          type: 'error'
+        });
+        setIsRecording(false);
+      } else if (voice.error.includes('no-speech')) {
+        setToast({
+          message: 'No speech detected. Please try speaking closer to your microphone.',
+          type: 'warning'
+        });
+        setIsRecording(false);
+      } else if (voice.error.includes('audio-capture')) {
+        setToast({
+          message: 'Microphone not found. Please check your microphone connection.',
+          type: 'error'
+        });
+        setIsRecording(false);
+      }
+    }
+  }, [voice?.error]);
+
   return (
-    <div style={{ position: "fixed", zIndex: 9999, ...positionStyles }}>
-      {open ? (
+    <>
+      {/* Toast Notifications */}
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      
+      <div style={{ position: "fixed", zIndex: 9999, ...positionStyles }}>
+        {open ? (
         <div
           style={{
             width: 360,
@@ -92,6 +150,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
             agent={agent}
             theme={theme}
             onClose={() => setOpen(false)}
+            voice={voice}
           />
 
           <MessagesList
@@ -101,6 +160,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
             fontStyles={fontStyles}
             agentAvatar={agent?.avatar}
             messagesEndRef={messagesEndRef}
+            voice={voice}
           />
 
           <MessageInput
@@ -121,6 +181,7 @@ export const AgentWidget: React.FC<AgentWidgetProps> = ({ config }) => {
           agentAvatar={agent?.avatar} 
         />
       )}
-    </div>
+      </div>
+    </>
   );
 };

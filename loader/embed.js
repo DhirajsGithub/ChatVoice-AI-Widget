@@ -35,16 +35,35 @@
           console.error('AgentWidget bundle failed to load.');
         }
       };
+      script.onerror = () => {
+        console.error('AgentWidget: Failed to load bundle script');
+      };
       shadowRoot.appendChild(script);
   
       // Optional: inject minimal base CSS to isolate the widget
       const style = document.createElement('style');
       style.textContent = `
         :host {
-          all: initial;
+          position: fixed !important;
+          z-index: 9999 !important;
+          display: block !important;
         }
         * {
           box-sizing: border-box;
+        }
+        @keyframes pulse {
+          0% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.7;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
         }
       `;
       shadowRoot.appendChild(style);

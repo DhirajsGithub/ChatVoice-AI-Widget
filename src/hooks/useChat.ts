@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { GeminiApiService } from '../services/geminiApi';
+import { useVoice } from './useVoice';
 
 export interface Message {
   id: string;
@@ -8,7 +9,7 @@ export interface Message {
   timestamp: Date;
 }
 
-export const useChat = (context?: string) => {
+export const useChat = (context?: string, enableVoice: boolean = true) => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
@@ -21,6 +22,9 @@ export const useChat = (context?: string) => {
 
   // Create API service instance with hardcoded API key
   const geminiApi = new GeminiApiService();
+  
+  // Initialize voice functionality
+  const voice = useVoice();
 
   const sendMessage = async (userMessage: string) => {
     if (!userMessage.trim() || isLoading) return;
@@ -59,6 +63,11 @@ export const useChat = (context?: string) => {
       };
 
       setMessages((prev) => [...prev, botMessage]);
+      
+      // Auto-speak the response if voice is enabled
+      if (enableVoice && voice.isSupported) {
+        voice.speak(response);
+      }
     } catch (error) {
       console.error('Error sending message:', error);
       const errorMessage: Message = {
@@ -73,9 +82,18 @@ export const useChat = (context?: string) => {
     }
   };
 
+  // Voice message handler
+  const sendVoiceMessage = useCallback(async (transcript: string) => {
+    if (transcript.trim()) {
+      await sendMessage(transcript);
+    }
+  }, []);
+
   return {
     messages,
     isLoading,
     sendMessage,
+    sendVoiceMessage,
+    voice: enableVoice ? voice : null,
   };
 };

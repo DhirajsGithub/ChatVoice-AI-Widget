@@ -69,22 +69,51 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           onClick={onMicClick}
           disabled={isLoading}
           style={{
-            width: '32px',
-            height: '32px',
+            width: '36px',
+            height: '36px',
             borderRadius: '50%',
-            border: 'none',
+            border: isRecording ? '2px solid #ff4444' : '2px solid transparent',
             backgroundColor: isRecording 
-              ? '#ff4444'
+              ? '#fff'
               : (theme?.primaryColor || '#4F46E5'),
-            color: '#fff',
+            color: isRecording ? '#ff4444' : '#fff',
             cursor: isLoading ? 'not-allowed' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            fontSize: '14px'
+            fontSize: '16px',
+            transition: 'all 0.3s ease',
+            transform: isRecording ? 'scale(1.05)' : 'scale(1)',
+            boxShadow: isRecording 
+              ? '0 0 15px rgba(255, 68, 68, 0.4), inset 0 0 10px rgba(255, 68, 68, 0.1)'
+              : '0 2px 8px rgba(0,0,0,0.15)',
+            position: 'relative',
+            overflow: 'hidden'
           }}
+          title={isRecording ? 'Stop recording' : 'Start voice recording'}
         >
-          🎤
+          {isRecording ? (
+            <div style={{
+              width: '12px',
+              height: '12px',
+              backgroundColor: '#ff4444',
+              borderRadius: '2px'
+            }} />
+          ) : (
+            '🎤'
+          )}
+          {isRecording && (
+            <div style={{
+              position: 'absolute',
+              top: '-2px',
+              right: '-2px',
+              width: '8px',
+              height: '8px',
+              backgroundColor: '#ff4444',
+              borderRadius: '50%',
+              animation: 'pulse 1.5s infinite'
+            }} />
+          )}
         </button>
         <button
           onClick={onSend}

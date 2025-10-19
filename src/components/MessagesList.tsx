@@ -20,6 +20,7 @@ interface MessagesListProps {
   };
   agentAvatar?: string;
   messagesEndRef: React.RefObject<HTMLDivElement | null>;
+  voice?: any;
 }
 
 export const MessagesList: React.FC<MessagesListProps> = ({
@@ -28,7 +29,8 @@ export const MessagesList: React.FC<MessagesListProps> = ({
   theme,
   fontStyles,
   agentAvatar,
-  messagesEndRef
+  messagesEndRef,
+  voice
 }) => {
   return (
     <div style={{ flex: 1, padding: 12, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
@@ -69,6 +71,36 @@ export const MessagesList: React.FC<MessagesListProps> = ({
           </div>
         </div>
       )}
+      
+      {/* Stop Voice Button - Show when AI is speaking */}
+      {voice && voice.isSpeaking && (
+        <div style={{ 
+          display: 'flex', 
+          justifyContent: 'center', 
+          marginTop: '8px',
+          padding: '8px'
+        }}>
+          <button
+            onClick={() => voice.stopSpeaking()}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: '#ff4444',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              fontSize: '12px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              boxShadow: '0 2px 8px rgba(255, 68, 68, 0.3)'
+            }}
+          >
+            ⏹️ Stop Speaking
+          </button>
+        </div>
+      )}
+      
       <div ref={messagesEndRef} />
     </div>
   );
