@@ -2,6 +2,8 @@
 
 > **The Ultimate AI-Powered Voice Chat Widget for Modern Websites**
 
+**[🎯 Live Demo](https://chat-voice-ai-widget.netlify.app/)** - Click on the bot in the bottom right corner to try it!
+
 Transform your website into an intelligent, multilingual voice-enabled assistant that engages visitors 24/7. ChatVoice-AI-Widget is a lightweight, embeddable solution that brings cutting-edge AI conversation capabilities to any website with just a single script tag.
 
 ## 🚀 What is ChatVoice-AI-Widget?
