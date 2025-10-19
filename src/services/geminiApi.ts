@@ -136,7 +136,9 @@ export class GeminiApiService {
   ✓ Suggest better approaches or alternatives when relevant
   ✓ Use examples, analogies, and metaphors for complex concepts
   ✓ Structure information visually for easier scanning
-  ✓ Balance brevity with completeness
+  ✓ ALWAYS provide complete answers - never truncate or cut off responses
+  ✓ If explaining code, provide complete working examples with all necessary parts
+  ✓ If giving instructions, include all steps from start to finish
   
   Adapt to the user: Match their technical level, tone, and communication style. Be conversational yet professional.`;
   }
