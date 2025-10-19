@@ -31,12 +31,14 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
   });
 
   if (!voice || !voice.isSupported) {
+    const isDisabledByConfig = !enableVoice;
+    const isBrowserUnsupported = voice && !voice.isSupported;
+    
     return (
       <div style={{
         position: 'absolute',
         top: '100%',
         right: 0,
-        marginTop: '8px',
         padding: '16px',
         backgroundColor: '#fff',
         borderRadius: '8px',
@@ -45,10 +47,28 @@ export const VoiceSettings: React.FC<VoiceSettingsProps> = ({ voice, theme, onCl
         zIndex: 1000
       }}>
         <div style={{ textAlign: 'center', color: '#666' }}>
-          <p>🎤 Voice features not supported in this browser</p>
-          <p style={{ fontSize: '12px', marginTop: '8px' }}>
-            Try using Chrome or Edge for full voice support
-          </p>
+          {isDisabledByConfig ? (
+            <>
+              <p>🔇 Voice features disabled</p>
+              <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                Please enable voice features in the widget configuration if you want to use them
+              </p>
+            </>
+          ) : isBrowserUnsupported ? (
+            <>
+              <p>🎤 Voice features not supported</p>
+              <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                Try using Chrome or Edge for full voice support
+              </p>
+            </>
+          ) : (
+            <>
+              <p>⏳ Loading voice features...</p>
+              <p style={{ fontSize: '12px', marginTop: '8px' }}>
+                Please wait while voice features are being initialized
+              </p>
+            </>
+          )}
         </div>
         <button
           onClick={onClose}
